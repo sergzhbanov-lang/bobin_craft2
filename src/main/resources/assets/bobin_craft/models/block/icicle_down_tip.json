@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "cross": "bobin_craft:block/icicle_down_tip"
+  }
+}

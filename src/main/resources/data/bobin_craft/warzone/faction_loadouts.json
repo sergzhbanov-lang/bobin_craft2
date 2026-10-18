@@ -1,0 +1,9 @@
+{
+  "REGULAR_ARMY": {"primary":"AK47","sentry":"AK47","elite":"CRYO","reactionTicks":20,"spreadDegrees":4.5,"burstSize":3,"burstPauseTicks":18,"reserveMagazines":3,"detectionRange":44,"armored":true},
+  "IRON_WOLVES": {"primary":"AK47","sentry":"AK47","elite":"BREACHER","reactionTicks":18,"spreadDegrees":4.0,"burstSize":3,"burstPauseTicks":16,"reserveMagazines":4,"detectionRange":46,"armored":true},
+  "GLASS_COMPANY": {"primary":"AK47","sentry":"SPOTTER","elite":"CRYO","reactionTicks":18,"spreadDegrees":3.5,"burstSize":2,"burstPauseTicks":18,"reserveMagazines":4,"detectionRange":48,"armored":true},
+  "FROST_CORPS": {"primary":"CRYO","sentry":"AK47","elite":"CRYO","reactionTicks":22,"spreadDegrees":4.0,"burstSize":3,"burstPauseTicks":20,"reserveMagazines":3,"detectionRange":44,"armored":true},
+  "ASH_RAIDERS": {"primary":"SPOTTER","sentry":"AK47","elite":"BREACHER","reactionTicks":28,"spreadDegrees":7.0,"burstSize":1,"burstPauseTicks":25,"reserveMagazines":2,"detectionRange":36,"armored":false},
+  "BLACK_CROWS": {"primary":"SPOTTER","sentry":"AK47","elite":"AK47","reactionTicks":26,"spreadDegrees":6.0,"burstSize":2,"burstPauseTicks":24,"reserveMagazines":2,"detectionRange":40,"armored":false},
+  "MARSH_REAVERS": {"primary":"SPOTTER","sentry":"SPOTTER","elite":"BREACHER","reactionTicks":28,"spreadDegrees":6.5,"burstSize":1,"burstPauseTicks":28,"reserveMagazines":2,"detectionRange":36,"armored":false}
+}

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "bobin_craft:block/radio",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "bobin_craft:block/radio",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "bobin_craft:block/radio",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "bobin_craft:block/radio",
+      "y": 270
+    }
+  }
+}

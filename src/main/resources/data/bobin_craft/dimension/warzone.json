@@ -1,0 +1,14 @@
+{
+  "type": "bobin_craft:warzone",
+  "generator": {
+    "type": "bobin_craft:warzone",
+    "size": 1024,
+    "biome_source": {
+      "type": "bobin_craft:warzone",
+      "plains": "bobin_craft:frontier_plains",
+      "highlands": "bobin_craft:frontier_highlands",
+      "badlands": "bobin_craft:frontier_badlands",
+      "marsh": "bobin_craft:frontier_marsh"
+    }
+  }
+}

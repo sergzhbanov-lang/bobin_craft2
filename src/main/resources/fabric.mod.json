@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "bobin_craft",
+  "version": "${version}",
+  "name": "Bobin_craft",
+  "description": "Tactical top-down survival shooter: isometric camera, mouse cursor, point-and-click movement, fog of war, unique firearms, and wave-based Siege mode for Minecraft 1.20.1",
+  "authors": [
+    "Bobin_craft Team"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.bobincraft.BobinCraft"
+    ],
+    "client": [
+      "com.bobincraft.BobinCraftClient"
+    ]
+  },
+  "mixins": [
+    "bobin_craft.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "bobin_craft:block/equipment_locker",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "bobin_craft:block/equipment_locker",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "bobin_craft:block/equipment_locker",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "bobin_craft:block/equipment_locker",
+      "y": 270
+    }
+  }
+}

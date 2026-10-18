@@ -1,0 +1,14 @@
+allprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('java')) {
+            tasks.register('bobinSmokeClasspath') {
+                dependsOn tasks.named('classes')
+                doLast {
+                    def destination = file("${buildDir}/server-smoke/classpath.txt")
+                    destination.parentFile.mkdirs()
+                    destination.text = sourceSets.main.output.asPath + File.pathSeparator + sourceSets.main.compileClasspath.asPath
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "bobin_craft:block/palisade",
+    "end": "bobin_craft:block/palisade_end"
+  }
+}

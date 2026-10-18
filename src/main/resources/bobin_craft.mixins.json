@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.bobincraft.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "CameraMixin",
+    "KeyboardInputMixin",
+    "InGameHudMixin",
+    "GameRendererMixin",
+    "MinecraftClientMixin",
+    "BlockRenderManagerMixin",
+    "EntityRenderDispatcherMixin",
+    "ChunkRendererRegionMixin",
+    "PlayerEntityModelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "bobin_craft:block/weapon_rack",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "bobin_craft:block/weapon_rack",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "bobin_craft:block/weapon_rack",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "bobin_craft:block/weapon_rack",
+      "y": 270
+    }
+  }
+}

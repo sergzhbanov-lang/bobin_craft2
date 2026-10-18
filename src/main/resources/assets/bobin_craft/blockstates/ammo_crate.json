@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "bobin_craft:block/ammo_crate"
+    }
+  }
+}

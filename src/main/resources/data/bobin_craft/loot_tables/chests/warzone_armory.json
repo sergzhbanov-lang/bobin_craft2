@@ -1,0 +1,68 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 4, "max": 6 },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gunpowder",
+          "weight": 24,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 5, "max": 12 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_ingot",
+          "weight": 24,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 4, "max": 10 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "weight": 18,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 2, "max": 6 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "weight": 10,
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 2 } }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_chestplate",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_helmet",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:shield",
+          "weight": 6
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:empty", "weight": 55 },
+        { "type": "minecraft:item", "name": "bobin_craft:spotter", "weight": 12 },
+        { "type": "minecraft:item", "name": "bobin_craft:breacher", "weight": 12 },
+        { "type": "minecraft:item", "name": "bobin_craft:medic_gun", "weight": 9 },
+        { "type": "minecraft:item", "name": "bobin_craft:cryo_carbine", "weight": 7 },
+        { "type": "minecraft:item", "name": "bobin_craft:ak47", "weight": 5 }
+      ]
+    }
+  ]
+}

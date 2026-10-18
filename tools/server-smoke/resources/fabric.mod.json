@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "id": "bobin_smoke_harness",
+  "version": "1.0.0",
+  "name": "Temporary Bobin Integration Smoke Harness",
+  "environment": "server",
+  "entrypoints": {"main": ["com.bobincraft.smoke.HubSmoke"]},
+  "depends": {"fabricloader": ">=0.15", "minecraft": "1.20.1", "fabric-api": "*", "bobin_craft": "*"}
+}

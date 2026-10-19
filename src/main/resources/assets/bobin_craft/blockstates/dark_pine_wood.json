@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "bobin_craft:block/dark_pine_wood"
+    },
+    "axis=z": {
+      "model": "bobin_craft:block/dark_pine_wood",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "bobin_craft:block/dark_pine_wood",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

@@ -35,14 +35,15 @@
       "type": "bobin_craft:warzone",
       "generator": {
         "type": "bobin_craft:warzone",
-        "size": 1024,
+        "size": 2048,
         "biome_source": {
           "type": "bobin_craft:warzone",
-          "plains": "bobin_craft:frontier_plains",
-          "highlands": "bobin_craft:frontier_highlands",
-          "badlands": "bobin_craft:frontier_badlands",
-          "marsh": "bobin_craft:frontier_marsh"
-        }
+          "plains": "bobin_craft:exclusion_forest",
+          "highlands": "bobin_craft:exclusion_ridge",
+          "badlands": "bobin_craft:exclusion_forest",
+          "marsh": "bobin_craft:exclusion_marsh"
+        },
+        "generation_version": 4
       }
     }
   }

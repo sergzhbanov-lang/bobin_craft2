@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "bobin_craft:block/lichen_rock",
+        "y": 0
+      },
+      {
+        "model": "bobin_craft:block/lichen_rock",
+        "y": 90
+      },
+      {
+        "model": "bobin_craft:block/lichen_rock",
+        "y": 180
+      },
+      {
+        "model": "bobin_craft:block/lichen_rock",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "variant=0,waterlogged=false": {
+      "model": "bobin_craft:block/river_pebbles_0"
+    },
+    "variant=0,waterlogged=true": {
+      "model": "bobin_craft:block/river_pebbles_0"
+    },
+    "variant=1,waterlogged=false": {
+      "model": "bobin_craft:block/river_pebbles_1"
+    },
+    "variant=1,waterlogged=true": {
+      "model": "bobin_craft:block/river_pebbles_1"
+    },
+    "variant=2,waterlogged=false": {
+      "model": "bobin_craft:block/river_pebbles_2"
+    },
+    "variant=2,waterlogged=true": {
+      "model": "bobin_craft:block/river_pebbles_2"
+    }
+  }
+}

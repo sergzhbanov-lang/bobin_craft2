@@ -16,9 +16,10 @@ public class AK47Item extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.literal("§7Штурмовой автомат для тактического режима MOBA."));
+        tooltip.add(Text.literal("§7Штурмовой автомат для обычного и тактического вида."));
         tooltip.add(Text.literal("§eЛКМ: §fОдиночный выстрел"));
         tooltip.add(Text.literal("§eЗажатие ЛКМ: §fСтрельба очередью"));
+        tooltip.add(Text.literal("§eR: §fПерезарядка магазина"));
         tooltip.add(Text.literal("§cКрасный луч: §fЛазерный целеуказатель"));
     }
 }

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "bobin_craft:block/dark_pine_wood_top",
+    "side": "bobin_craft:block/dark_pine_wood"
+  }
+}

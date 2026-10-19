@@ -8,7 +8,7 @@ set -e
 OUT="${TMPDIR:-/tmp}/bobin_headless"
 rm -rf "$OUT"; mkdir -p "$OUT"
 W=src/main/java/com/bobincraft/warzone
-CORE="$W/Faction.java $W/WarzoneNoise.java $W/WarzoneTerrain.java $W/WarzoneBasePlan.java $W/WarzoneFlora.java \
+CORE="$W/Faction.java $W/WarzoneNoise.java $W/WarzoneTerrain.java $W/NaturalLandscape.java $W/NaturalDrainage.java $W/NaturalWaterways.java $W/NaturalForest.java $W/WarzoneBasePlan.java $W/WarzoneFlora.java \
   $W/BpSpec.java $W/BpPalette.java $W/BpBuilder.java $W/SiteDesign.java $W/SiteModules.java $W/SiteBuilder.java $W/HideoutPlan.java $W/HideoutBuilder.java $W/PoiPlan.java $W/CheckpointBuilder.java $W/BattlefieldBuilder.java $W/Blueprint.java $W/BridgeBlueprint.java $W/BridgeBuilder.java $W/WarzoneBlueprints.java"
 if [ "$1" = "poi" ]; then
   shift

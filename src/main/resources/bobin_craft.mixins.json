@@ -3,12 +3,16 @@
   "minVersion": "0.8",
   "package": "com.bobincraft.mixin",
   "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "DimensionOptionsRegistryHolderMixin"
+  ],
   "client": [
+    "MinecraftClientMixin",
+    "FluidRendererMixin",
     "CameraMixin",
     "KeyboardInputMixin",
     "InGameHudMixin",
     "GameRendererMixin",
-    "MinecraftClientMixin",
     "BlockRenderManagerMixin",
     "EntityRenderDispatcherMixin",
     "ChunkRendererRegionMixin",

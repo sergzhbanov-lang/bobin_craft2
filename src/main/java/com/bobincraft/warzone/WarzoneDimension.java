@@ -3,6 +3,7 @@ package com.bobincraft.warzone;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -48,10 +49,19 @@ public final class WarzoneDimension {
 
     public static void register() {
         org.slf4j.LoggerFactory.getLogger("bobin_craft/warzone")
-                .info("[Warzone] Сборка 1.0.12: дорожные блокпосты и баррикады, старые поля боёв — чертежи по реальному рельефу (плюс базы, вышки, укрытия)");
+                .info("[Warzone] Natural terrain profile v4: mountain rivers and terrain-following roads; saved v1-v3 generators remain unchanged");
         Registry.register(Registries.BIOME_SOURCE, ID, WarzoneBiomeSource.CODEC);
         Registry.register(Registries.CHUNK_GENERATOR, ID, WarzoneChunkGenerator.CODEC);
 
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            ServerWorld world = server.getWorld(WORLD);
+            WarzoneChunkGenerator generator = generatorOf(world);
+            if (generator != null && generator.terrain().isNatural()) {
+                // Each dimension has its own border; never resize the Overworld or the hub.
+                world.getWorldBorder().setCenter(0.0, 0.0);
+                world.getWorldBorder().setSize(generator.arenaSize());
+            }
+        });
         ServerTickEvents.END_WORLD_TICK.register(WarzoneDimension::keepInsideArena);
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
@@ -141,9 +151,14 @@ public final class WarzoneDimension {
 
         double x = t.landingX() + 0.5;
         double z = t.landingZ() + 0.5;
-        double y = WarzoneTerrain.LANDING_Y + 1;
+        double y = t.landingY() + 1;
         player.teleport(target, x, y, z, 180.0f, 0.0f);   // смотрим на север — вглубь арены
         player.fallDistance = 0;
+        if (t.isNatural()) {
+            player.sendMessage(Text.literal("Warzone: " + t.size + " x " + t.size
+                    + " forest exclusion area. Exit: /bobin warzone leave"), false);
+            return 1;
+        }
         int baseCount = t.basePlan() != null ? t.basePlan().sites().size() : 0;
         player.sendMessage(Text.literal("§6[Зона боевых действий] §fВы высадились на южной окраине арены "
                 + t.size + "×" + t.size + " (вражеских объектов: §c" + baseCount
@@ -193,6 +208,12 @@ public final class WarzoneDimension {
             return 0;
         }
         WarzoneTerrain t = gen.terrain();
+        if (t.isNatural()) {
+            src.sendFeedback(() -> Text.literal("Warzone natural terrain v" + t.generationVersion()
+                    + ": " + t.size + " x " + t.size + " blocks, X/Z [" + t.min + ", " + t.max
+                    + "), " + t.naturalLandscape().reservations().size() + " future terrain locations; no structures built."), false);
+            return 1;
+        }
         WarzoneBasePlan plan = t.basePlan();
         int totalSites = plan != null ? plan.sites().size() : 0;
         src.sendFeedback(() -> Text.literal("§6[Зона боевых действий] §fАрена " + t.size + "×" + t.size + " бл. (X/Z от "
@@ -455,7 +476,7 @@ public final class WarzoneDimension {
             BlockPos found = scanColumn(world, px, pz, Math.max(baseY, t.height(px, pz)) + 6);
             if (found != null) return found;
         }
-        return new BlockPos(t.landingX(), WarzoneTerrain.LANDING_Y + 1, t.landingZ());
+        return new BlockPos(t.landingX(), t.landingY() + 1, t.landingZ());
     }
 
     private static BlockPos scanColumn(ServerWorld world, int x, int z, int startY) {

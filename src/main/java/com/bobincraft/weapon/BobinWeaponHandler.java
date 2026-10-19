@@ -197,9 +197,6 @@ public class BobinWeaponHandler {
         if (main.getItem() instanceof GunItem) return WeaponType.GUN;
         if (main.isOf(BobinCraft.SNIPER_RIFLE)) return WeaponType.SNIPER;
         if (main.isOf(BobinCraft.AK47)) return WeaponType.AK47;
-        String name = main.getName().getString().toLowerCase();
-        if (name.contains("sniper") || name.contains("снайпер") || name.contains("винтовк")) return WeaponType.SNIPER;
-        if (name.contains("ak") || name.contains("ака") || name.contains("автомат")) return WeaponType.AK47;
         return WeaponType.NONE;
     }
 
@@ -317,6 +314,10 @@ public class BobinWeaponHandler {
     public static void startReload(MinecraftClient client) {
         if (client.player == null || client.world == null) return;
         synchronizeWorld(client);
+        if (isReloading && client.player.getMainHandStack() != reloadStack) {
+            isReloading = false;
+            reloadTicks = 0;
+        }
         if (isReloading) return;
         WeaponType weapon = getHeldWeaponType(client.player);
         if (weapon == WeaponType.NONE) return;
@@ -353,8 +354,13 @@ public class BobinWeaponHandler {
      * Стрельба из оружия на ЛКМ. Перезарядка на кнопку атаки запрещена.
      */
     public static void startShooting(MinecraftClient client, HitResult hit) {
-        if (client.player == null || client.world == null || !client.isWindowFocused()) return;
+        if (client.player == null || client.world == null || !client.isWindowFocused()
+                || !client.player.isAlive() || client.player.isSpectator() || client.player.isUsingItem()) return;
         synchronizeWorld(client);
+        if (isReloading && client.player.getMainHandStack() != reloadStack) {
+            isReloading = false;
+            reloadTicks = 0;
+        }
         if (isReloading) return;
         hit = getAimHit(client, hit);
         updateAimFrame(client, hit);
@@ -422,12 +428,12 @@ public class BobinWeaponHandler {
         synchronizeWorld(client);
 
         boolean normalControls = !BobinCameraState.isActive() && client.currentScreen == null
-                && client.isWindowFocused();
+                && client.isWindowFocused() && player.isAlive() && !player.isSpectator() && !player.isUsingItem();
         if (reloadKey != null) {
             while (reloadKey.wasPressed()) if (normalControls) startReload(client);
             while (scopeKey.wasPressed()) if (normalControls) toggleScope(client);
         }
-        if (!isHoldingSniper(player)) BobinCameraState.setSniperScopeActive(false);
+        if (!isHoldingSniper(player) || !player.isAlive() || player.isSpectator()) BobinCameraState.setSniperScopeActive(false);
         previousScopeBlend = scopeBlend;
         scopeBlend = MathHelper.clamp(scopeBlend + (BobinCameraState.isSniperScopeActive() ? 0.25f : -0.25f), 0.0f, 1.0f);
 

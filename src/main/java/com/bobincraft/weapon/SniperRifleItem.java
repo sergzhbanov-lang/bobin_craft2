@@ -18,7 +18,7 @@ public class SniperRifleItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.literal("§7Тяжелая снайперская винтовка с бронебойными патронами."));
         tooltip.add(Text.literal("§eЛКМ: §fМощный выстрел (урон: §c50.0§f)"));
-        tooltip.add(Text.literal("§eX: §fСнайперский прицел (+10% к макс. зуму камеры)"));
+        tooltip.add(Text.literal("§eX: §fСнайперский прицел (в обычном и тактическом виде)"));
         tooltip.add(Text.literal("§eR: §fПерезарядка магазина"));
         tooltip.add(Text.literal("§bОсобенность: §fПробивает окна любой толщины (1 выстрел — трещины, 2 — разрушение)"));
     }

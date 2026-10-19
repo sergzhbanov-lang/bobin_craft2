@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "bobin_craft:dark_forest_soil",
+    "bobin_craft:pine_needle_ground",
+    "bobin_craft:mossy_forest_soil",
+    "bobin_craft:forest_litter"
+  ]
+}

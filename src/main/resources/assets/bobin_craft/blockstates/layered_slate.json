@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "bobin_craft:block/layered_slate",
+        "y": 0
+      },
+      {
+        "model": "bobin_craft:block/layered_slate",
+        "y": 90
+      },
+      {
+        "model": "bobin_craft:block/layered_slate",
+        "y": 180
+      },
+      {
+        "model": "bobin_craft:block/layered_slate",
+        "y": 270
+      }
+    ]
+  }
+}

@@ -36,6 +36,7 @@ public class BobinCraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         RaidClient.register();
         BobinWeaponHandler.initializeControls();
+        com.bobincraft.warzone.WarzoneWaterColors.register();
         toggleKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.bobin_craft.toggle_bobin_mode",
                 InputUtil.Type.KEYSYM,
@@ -47,11 +48,19 @@ public class BobinCraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(BobinCraft.ICICLE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(HubContent.CAMOUFLAGE_NET, RenderLayer.getCutout());
 
+        BlockRenderLayerMap.INSTANCE.putBlock(com.bobincraft.warzone.ForestBlocks.DRY_UNDERGROWTH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(com.bobincraft.warzone.ForestBlocks.FOREST_GRASS, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(com.bobincraft.warzone.ForestBlocks.PALE_SEDGE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(com.bobincraft.warzone.ForestBlocks.LOW_FOREST_BUSH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(com.bobincraft.warzone.ForestBlocks.NEEDLE_UNDERGROWTH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(com.bobincraft.warzone.ForestBlocks.RIVER_REEDS, RenderLayer.getCutout());
+
         movementController = new BobinMovementController();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // Visibility caches also follow disconnects/dimension changes while a GUI is open.
             BuildingCutawayManager.tick(client);
+            if (client.isPaused() || !client.isWindowFocused()) BobinWeaponHandler.stopShooting();
             if (client.player == null || client.world == null) {
                 BobinWeaponHandler.tick(client, null);
                 movementController.clearTarget();

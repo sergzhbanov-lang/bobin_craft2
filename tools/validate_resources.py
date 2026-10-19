@@ -31,6 +31,10 @@ CUSTOM_LOOT_ITEMS = {
     "icicle", "map_table", "supply_crate", "metal_floor", "bunker_wall", "equipment_panel",
     "tent_fabric", "reinforced_wood", "palisade", "camouflage_net", "sand_bags",
     "ammo_crate", "equipment_locker", "weapon_rack", "radio", "warning_sign",
+    "dark_forest_soil", "pine_needle_ground", "mossy_forest_soil", "forest_litter",
+    "weathered_bark", "dark_pine_wood", "rotten_wood", "moss_covered_rock", "dry_undergrowth",
+    "forest_grass", "pale_sedge", "low_forest_bush", "needle_undergrowth",
+    "river_stone", "layered_slate", "lichen_rock", "river_pebbles", "river_reeds",
 }
 POTIONS = {"healing", "regeneration"}
 THEMES = {"CIVILIAN": "civilian", "BANDIT": "bandit", "MEDICAL": "medical",
@@ -111,7 +115,8 @@ def main():
                 f"Missing thematic loot table {theme}")
     # Verify that custom loot item IDs are actually present in the registration source.
     registrars = "\n".join((JAVA / name).read_text() for name in (
-        "com/bobincraft/BobinCraft.java", "com/bobincraft/weapon/GunType.java", "com/bobincraft/raid/HubContent.java"))
+        "com/bobincraft/BobinCraft.java", "com/bobincraft/weapon/GunType.java", "com/bobincraft/raid/HubContent.java",
+        "com/bobincraft/warzone/ForestBlocks.java"))
     for item_id in loot_items:
         if item_id.startswith("bobin_craft:"):
             require(f'"{item_id.split(":", 1)[1]}"' in registrars, f"Unregistered custom loot item {item_id}")
@@ -123,6 +128,7 @@ def main():
         require(en[key].count("%s") == uk[key].count("%s"), f"Translation placeholder mismatch: {key}")
     subprocess.run([sys.executable, str(ROOT / "tools/generate_hub_textures.py"), "--check"], check=True)
     subprocess.run([sys.executable, str(ROOT / "tools/generate_outpost_assets.py"), "--check"], check=True)
+    subprocess.run([sys.executable, str(ROOT / "tools/check_forest_assets.py")], check=True)
     print(f"Validated {len(resources)} JSON files, {loot_tables} loot tables and {len(loot_items)} reviewed item IDs.")
     print("All five thematic loot tables have blueprint consumers; English/Ukrainian keys and placeholders agree.")
 

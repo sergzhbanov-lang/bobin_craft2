@@ -128,6 +128,10 @@ final class WarzoneSurface {
     }
 
     static void choose(WarzoneTerrain t, WarzoneTerrain.Sample s, double slope, int x, int z, Column out) {
+        if (t.isNatural()) {
+            NaturalSurface.choose(t, s, slope, x, z, out);
+            return;
+        }
         double r = WarzoneNoise.unit(WarzoneNoise.hash(t.seed + 5, x, z));
         int h = s.height;
         out.strata = false;

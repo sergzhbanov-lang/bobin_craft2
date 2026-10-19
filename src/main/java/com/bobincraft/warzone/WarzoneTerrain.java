@@ -47,6 +47,9 @@ public final class WarzoneTerrain {
 
     public enum Region { PLAINS, HIGHLANDS, BADLANDS, MARSH }
 
+    /** Visual and surface character of a revised water column. */
+    public enum WaterState { NONE, STILL, SLOW, FLOWING, RAPIDS }
+
     /** Результат выборки одной колонки. */
     public static final class Sample {
         /** Высота верхнего твёрдого блока. */
@@ -83,6 +86,14 @@ public final class WarzoneTerrain {
         public double bog;
         /** Глубокая тёмная заводь болота, 0..1. */
         public double pool;
+        /** Deterministic route material family and local amount of wear. */
+        public int routeStyle;
+        public double routeWear;
+        /** Revised water character and unit direction along the channel. */
+        public WaterState waterState = WaterState.NONE;
+        public double flowX, flowZ;
+        /** Top generated water block; mountain reaches can sit above the lowland sea level. */
+        public int waterLevel = SEA_LEVEL;
     }
 
     public final long seed;
@@ -102,10 +113,25 @@ public final class WarzoneTerrain {
     private final int landingZ;
     private final WarzoneBasePlan basePlan;
 
+    private final int generationVersion;
+    private final NaturalLandscape naturalLandscape;
+    private volatile NaturalForest naturalForest;
+
+    /** Existing callers and saved generators retain the original terrain algorithm. */
     public WarzoneTerrain(long seed, int size) {
+        this(seed, size, 1);
+    }
+
+    public WarzoneTerrain(long seed, int size, int generationVersion) {
         if (size < 256 || size % 16 != 0) {
             throw new IllegalArgumentException("Размер арены должен быть кратен 16 и не меньше 256: " + size);
         }
+        if (generationVersion < 1 || generationVersion > 4) {
+            throw new IllegalArgumentException("Unsupported Warzone generation version: " + generationVersion);
+        }
+        this.generationVersion = generationVersion;
+        this.naturalLandscape = generationVersion >= 2
+                ? new NaturalLandscape(seed, size, generationVersion >= 3, generationVersion >= 4) : null;
         this.seed = seed;
         this.size = size;
         this.half = size / 2;
@@ -143,13 +169,13 @@ public final class WarzoneTerrain {
         this.windSin = Math.sin(wind);
 
         // Детерминированный план вражеских баз, аванпостов и дорог поверх естественного рельефа
-        this.basePlan = WarzoneBasePlan.generate(this);
+        this.basePlan = isNatural() ? WarzoneBasePlan.empty() : WarzoneBasePlan.generate(this);
 
         // Лесные укрытия: лёгкие точки интереса вне списка баз (ошибка планирования не роняет мир — укрытий просто не будет)
         HideoutPlan hp;
         String hpErr = null;
         try {
-            hp = HideoutPlan.generate(this);
+            hp = isNatural() ? HideoutPlan.empty() : HideoutPlan.generate(this);
         } catch (Throwable e) {
             hp = HideoutPlan.empty();
             hpErr = String.valueOf(e);
@@ -161,7 +187,7 @@ public final class WarzoneTerrain {
         PoiPlan pp;
         String ppErr = null;
         try {
-            pp = PoiPlan.generate(this, hp);
+            pp = isNatural() ? PoiPlan.empty() : PoiPlan.generate(this, hp);
         } catch (Throwable e) {
             pp = PoiPlan.empty();
             ppErr = String.valueOf(e);
@@ -190,6 +216,33 @@ public final class WarzoneTerrain {
 
     String hideoutPlanError() {
         return hideoutPlanError;
+    }
+
+    public int generationVersion() { return generationVersion; }
+
+    public boolean isNatural() { return generationVersion >= 2; }
+
+    /** Saved version-two worlds keep their original routes, water and surface palette. */
+    public boolean usesRevisedLandscape() { return generationVersion >= 3; }
+
+    public boolean usesLandscapeRivers() { return generationVersion >= 4; }
+
+    public int landingY() { return LANDING_Y; }
+
+    public NaturalLandscape naturalLandscape() {
+        if (naturalLandscape == null) throw new IllegalStateException("Legacy terrain has no natural landscape plan");
+        return naturalLandscape;
+    }
+
+    NaturalForest naturalForest() {
+        NaturalForest f = naturalForest;
+        if (f == null) {
+            synchronized (this) {
+                f = naturalForest;
+                if (f == null) naturalForest = f = new NaturalForest(this);
+            }
+        }
+        return f;
     }
 
     public WarzoneBasePlan basePlan() {
@@ -264,6 +317,7 @@ public final class WarzoneTerrain {
 
     /** Колонка зарезервирована под постройки или дороги (там не растёт случайная растительность). */
     public boolean isReserved(int x, int z) {
+        if (isNatural()) return naturalLandscape.isReserved(x, z);
         double dx = x - landingX();
         double dz = z - landingZ();
         if (dx * dx + dz * dz < 14.0 * 14.0) return true;
@@ -281,6 +335,7 @@ public final class WarzoneTerrain {
 
     /** Густота леса в точке, 0..1 (рощи и поляны — крупными пятнами). */
     public double forest(int x, int z) {
+        if (isNatural()) return naturalLandscape.forest(x, z);
         return smoothstep(-0.05, 0.35, forestN.fbm(x / 70.0 + 11.0, z / 70.0 - 3.0, 2));
     }
 
@@ -306,6 +361,11 @@ public final class WarzoneTerrain {
     }
 
     private void computeTerrain(int x, int z, Sample out, boolean applyBases) {
+        out.waterLevel = SEA_LEVEL;
+        if (isNatural()) {
+            naturalLandscape.sample(x, z, out);
+            return;
+        }
         out.edge = edgeDistance(x, z);
         out.road = 0.0;
         out.basePad = 0.0;
@@ -318,6 +378,10 @@ public final class WarzoneTerrain {
         out.oasis = 0.0;
         out.bog = 0.0;
         out.pool = 0.0;
+        out.routeStyle = 0;
+        out.routeWear = 0.0;
+        out.waterState = WaterState.NONE;
+        out.flowX = out.flowZ = 0.0;
 
         // Искажение координат — убирает «сеточность» шума
         double wx = x + warpX.fbm(x / 190.0, z / 190.0, 2) * 40.0;
@@ -526,6 +590,7 @@ public final class WarzoneTerrain {
 
     /** Лёгкая версия только для определения типа местности (биомы). */
     public Region region(int x, int z) {
+        if (isNatural()) return naturalLandscape.sampleRegion(x, z);
         double wx = x + warpX.fbm(x / 190.0, z / 190.0, 2) * 40.0;
         double wz = z + warpZ.fbm(x / 190.0 + 57.1, z / 190.0 - 23.9, 2) * 40.0;
         double ldx = x - landingX();

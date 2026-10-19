@@ -1,0 +1,22 @@
+{
+  "parent": "bobin_craft:block/river_pebbles_0",
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        1.1,
+        1.1,
+        1.1
+      ]
+    }
+  }
+}

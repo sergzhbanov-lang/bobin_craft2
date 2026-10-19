@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "bobin_craft:block/river_reeds_lower"
+    },
+    "half=upper": {
+      "model": "bobin_craft:block/river_reeds_upper"
+    }
+  }
+}

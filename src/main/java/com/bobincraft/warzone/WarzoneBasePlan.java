@@ -379,6 +379,11 @@ public final class WarzoneBasePlan {
         this.paths = Collections.unmodifiableList(paths);
     }
 
+    /** Natural generation has no built sites, encounters or legacy military roads. */
+    public static WarzoneBasePlan empty() {
+        return new WarzoneBasePlan(List.of(), List.of(), List.of(), List.of());
+    }
+
     public List<Bridge> bridges() {
         return bridges;
     }

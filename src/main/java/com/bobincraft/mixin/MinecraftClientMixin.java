@@ -16,7 +16,9 @@ public class MinecraftClientMixin {
     @Unique
     private boolean bobin_craft$usingGun(MinecraftClient client) {
         return !BobinCameraState.isActive() && client.currentScreen == null
-                && client.isWindowFocused() && BobinWeaponHandler.isHoldingWeapon(client.player);
+                && client.isWindowFocused() && client.player != null && client.player.isAlive()
+                && !client.player.isSpectator() && !client.player.isUsingItem()
+                && BobinWeaponHandler.isHoldingWeapon(client.player);
     }
 
     @Inject(method = "doAttack", at = @At("HEAD"), cancellable = true)

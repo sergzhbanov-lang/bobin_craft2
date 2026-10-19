@@ -1,0 +1,25 @@
+{
+  "description": "Procedural diagnostics; not an in-game screenshot. Surface area, not water volume.",
+  "size": 2048, "generationVersion": 4, "samplingStep": 2, "shallowDepthBlocks": [1, 2], "seeds": [
+    {"seed": 0, "sampledWaterColumns": 27396, "elevatedWaterColumns": 7038, "waterLevelRange": [62, 86], "shallowColumns": 10767, "deepColumns": 16629, "shallowFraction": 0.3930135786246167, "tributaries": 5, "finiteFlow": true, "stillWaterHasZeroFlow": true,
+     "depthHistogram": [0, 5910, 4857, 2381, 2058, 2570, 2901, 1516, 1270, 2490, 1404, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+     "waterStates": {"STILL": 4050, "SLOW": 10323, "FLOWING": 12024, "RAPIDS": 999}, "routeSegmentsByStyle": {"WAGON_TRACK": 492, "GRAVEL_ROAD": 427, "WOODLAND_TRAIL": 867, "WORN_FOOTPATH": 755},
+     "nominalRouteWidthRange": [2.8586418445968147, 7.60731363498049]},
+    {"seed": 1, "sampledWaterColumns": 27411, "elevatedWaterColumns": 6351, "waterLevelRange": [62, 86], "shallowColumns": 11133, "deepColumns": 16278, "shallowFraction": 0.40615081536609393, "tributaries": 4, "finiteFlow": true, "stillWaterHasZeroFlow": true,
+     "depthHistogram": [0, 5560, 5573, 3186, 1883, 2572, 2350, 1620, 1014, 2013, 1603, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+     "waterStates": {"STILL": 3169, "SLOW": 15226, "FLOWING": 7722, "RAPIDS": 1294}, "routeSegmentsByStyle": {"WAGON_TRACK": 645, "GRAVEL_ROAD": 692, "WOODLAND_TRAIL": 875, "WORN_FOOTPATH": 1021},
+     "nominalRouteWidthRange": [2.8607503650207597, 7.096349181846507]},
+    {"seed": 42, "sampledWaterColumns": 26677, "elevatedWaterColumns": 7677, "waterLevelRange": [62, 86], "shallowColumns": 10208, "deepColumns": 16469, "shallowFraction": 0.3826517224575477, "tributaries": 5, "finiteFlow": true, "stillWaterHasZeroFlow": true,
+     "depthHistogram": [0, 5654, 4554, 2326, 2102, 2811, 3049, 1431, 1155, 2150, 1410, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+     "waterStates": {"STILL": 3396, "SLOW": 12535, "FLOWING": 9844, "RAPIDS": 902}, "routeSegmentsByStyle": {"WAGON_TRACK": 584, "GRAVEL_ROAD": 264, "WOODLAND_TRAIL": 799, "WORN_FOOTPATH": 749},
+     "nominalRouteWidthRange": [2.5911863140704345, 8.503183524056134]},
+    {"seed": 123456789, "sampledWaterColumns": 31896, "elevatedWaterColumns": 7612, "waterLevelRange": [62, 86], "shallowColumns": 11679, "deepColumns": 20217, "shallowFraction": 0.3661587659894658, "tributaries": 5, "finiteFlow": true, "stillWaterHasZeroFlow": true,
+     "depthHistogram": [0, 5948, 5731, 3713, 2762, 3661, 3064, 1886, 1221, 2322, 1552, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+     "waterStates": {"STILL": 6348, "SLOW": 14820, "FLOWING": 9555, "RAPIDS": 1173}, "routeSegmentsByStyle": {"WAGON_TRACK": 420, "GRAVEL_ROAD": 966, "WOODLAND_TRAIL": 886, "WORN_FOOTPATH": 885},
+     "nominalRouteWidthRange": [2.422235245400518, 8.61869589699661]},
+    {"seed": -734842, "sampledWaterColumns": 30378, "elevatedWaterColumns": 8153, "waterLevelRange": [62, 86], "shallowColumns": 11229, "deepColumns": 19149, "shallowFraction": 0.36964250444400554, "tributaries": 5, "finiteFlow": true, "stillWaterHasZeroFlow": true,
+     "depthHistogram": [0, 6060, 5169, 3524, 2579, 3677, 2874, 1568, 1415, 1955, 1510, 42, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+     "waterStates": {"STILL": 5348, "SLOW": 12599, "FLOWING": 11276, "RAPIDS": 1155}, "routeSegmentsByStyle": {"WAGON_TRACK": 238, "GRAVEL_ROAD": 605, "WOODLAND_TRAIL": 666, "WORN_FOOTPATH": 793},
+     "nominalRouteWidthRange": [2.6837054577636725, 8.947915465858305]}
+  ]
+}

@@ -1,3 +1,34 @@
+# Mountain rivers, natural roads and weapon controls — 1.0.15
+
+New Warzone worlds use generation profile **4**. Existing worlds using profiles
+**1–3** retain their terrain and route plans. Use a **new world** to see the new
+landscape; do not edit a populated world's generation version.
+
+- Mountain springs feed connected tributaries and a broad main river. Water
+  elevation descends toward the lowlands; channels have deep pools, gravel
+  shelves, shallow fords and varied riverbed materials.
+- Roads follow walkable terrain, share continuous junctions and avoid deep
+  water and cliffs. Gravel roads, wagon ruts, forest trails and footpaths retain
+  distinct surfaces and verges.
+- River stone, layered slate, lichen rocks, varied boulders and low waterlogged
+  pebbles add stone variety. Banks have new tall reeds, ferns and aquatic plants;
+  tall grass is more common away from travel corridors.
+- Water has original animated ripple textures and mineral/peat color variation
+  in the Warzone. Native Minecraft water physics remain in use.
+- **Weapons work in normal view without G**: left mouse fires, **R** reloads,
+  and **X** toggles the sniper scope. Reload/scope keys can be changed in Controls.
+  **G** still opens the tactical camera.
+
+Install `dist/bobin_craft-1.0.15.jar` on the client and server with Minecraft
+**1.20.1**, Fabric Loader **0.15.11+** and Fabric API **0.92.2+1.20.1**. Remove the
+previous Bobin Craft JAR first. Build with Java 17 using `gradlew.bat build`
+(Windows) or `./gradlew build` (Linux/macOS).
+
+See `docs/landscape-and-controls-1.0.15.md` for validation and practical limits.
+The notes below describe previous releases.
+
+---
+
 # Bobin Craft — Camera, Movement and Forest Camp Update
 
 Minecraft **1.20.1**, Yarn **1.20.1+build.10**, Fabric Loader **0.15.11**, Fabric API **0.92.2+1.20.1**, **Java 17**, Gradle **8.8**, Fabric Loom **1.7.4**. Source version **1.0.13**. This updates the supplied project and preserves its procedural Warzone, deployment, loot, extraction, camera, fog, and Siege systems. See [current changes and validation](docs/controls-update.md); install the newly built 1.0.13 JAR for these changes.

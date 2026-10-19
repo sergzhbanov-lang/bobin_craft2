@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "bobin_craft:block/weathered_bark"
+    },
+    "axis=z": {
+      "model": "bobin_craft:block/weathered_bark",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "bobin_craft:block/weathered_bark",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

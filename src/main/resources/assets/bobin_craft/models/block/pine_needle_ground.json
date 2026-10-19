@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "bobin_craft:block/pine_needle_ground_top",
+    "bottom": "bobin_craft:block/dark_forest_soil_top",
+    "side": "bobin_craft:block/pine_needle_ground_side"
+  }
+}

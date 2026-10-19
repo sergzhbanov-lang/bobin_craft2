@@ -1,0 +1,39 @@
+{
+  "version": "1.0.15",
+  "minecraft": "1.20.1",
+  "generationVersion": 4,
+  "unitTests": {
+    "tests": 98,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "dedicatedServerPassMarkers": [
+    "BOBIN_SMOKE_WATER_ROUTES_PASS",
+    "BOBIN_SMOKE_NATURAL_PASS",
+    "BOBIN_SMOKE_FOREST_PASS",
+    "BOBIN_SMOKE_NPC_PERSISTENCE_PASS",
+    "BOBIN_SMOKE_READ_ONLY_PASS",
+    "BOBIN_SMOKE_PASS"
+  ],
+  "clientMixinTransforms": [
+    "MinecraftClient",
+    "GameRenderer",
+    "FluidRenderer"
+  ],
+  "fluidReloadPriority": 1100,
+  "legacyProfilesPreserved": [
+    1,
+    2,
+    3
+  ],
+  "interactivePlaytested": false,
+  "repositoryIntegrationPreserved": [
+    "camera controls",
+    "movement",
+    "fortified forest camp",
+    "tick-based weapon cooldowns",
+    "continuous scope zoom"
+  ],
+  "repositorySmokeLog": "Fresh-server smoke passed after repository integration"
+}

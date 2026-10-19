@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "bobin_craft:moss_covered_rock",
+    "bobin_craft:river_stone",
+    "bobin_craft:layered_slate",
+    "bobin_craft:lichen_rock",
+    "bobin_craft:river_pebbles"
+  ]
+}

@@ -31,28 +31,31 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-/**
- * Генератор чанков измерения «Зона боевых действий».
- * Рельеф и план вражеских объектов определяются {@link WarzoneTerrain} и {@link WarzoneBasePlan};
- * генератор раскладывает блоки рельефа и дорог, сажает растительность ({@link WarzoneDecor}),
- * строит посадочную площадку и возводит процедурные базы, аванпосты, бункеры и вышки ({@link WarzoneStructures}).
- * Вне квадрата арены чанки пустые.
- */
+/** Versioned, chunk-local Warzone generation. Saved generators retain their original terrain. */
 public final class WarzoneChunkGenerator extends ChunkGenerator {
-    public static final int DEFAULT_SIZE = 1024;
+    public static final int DEFAULT_SIZE = 2048;
+    public static final int CURRENT_GENERATION_VERSION = 4;
 
     public static final Codec<WarzoneChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(g -> g.biomeSource),
-            Codec.intRange(256, 4096).optionalFieldOf("size", DEFAULT_SIZE).forGetter(g -> g.size)
+            // Missing fields must decode as the original saved-world profile.
+            Codec.intRange(256, 4096).optionalFieldOf("size", 1024).forGetter(g -> g.size),
+            Codec.intRange(1, CURRENT_GENERATION_VERSION).optionalFieldOf("generation_version", 1).forGetter(g -> g.generationVersion)
     ).apply(instance, instance.stable(WarzoneChunkGenerator::new)));
 
     private final int size;
+    private final int generationVersion;
     private volatile WarzoneTerrain terrain;
     private volatile long seed;
     private volatile boolean seeded;
 
     public WarzoneChunkGenerator(BiomeSource biomeSource, int size) {
+        this(biomeSource, size, 1);
+    }
+
+    public WarzoneChunkGenerator(BiomeSource biomeSource, int size, int generationVersion) {
         super(biomeSource);
+        this.generationVersion = generationVersion;
         // размер арены — кратно 16 (целые чанки), не меньше 256
         this.size = Math.max(256, Math.round(size / 16.0f) * 16);
         if (biomeSource instanceof WarzoneBiomeSource warzoneBiomes) {
@@ -74,7 +77,7 @@ public final class WarzoneChunkGenerator extends ChunkGenerator {
     private synchronized void initSeed(long worldSeed) {
         if (!seeded) {
             this.seed = worldSeed;
-            this.terrain = new WarzoneTerrain(worldSeed, size);
+            this.terrain = new WarzoneTerrain(worldSeed, size, generationVersion);
             this.seeded = true;
         }
     }
@@ -160,7 +163,7 @@ public final class WarzoneChunkGenerator extends ChunkGenerator {
                     w.set(x, y, z, state);
                 }
                 // Вода
-                for (int y = h + 1; y <= WarzoneTerrain.SEA_LEVEL; y++) {
+                for (int y = h + 1; y <= s.waterLevel; y++) {
                     w.set(x, y, z, Blocks.WATER.getDefaultState());
                 }
             }
@@ -168,9 +171,14 @@ public final class WarzoneChunkGenerator extends ChunkGenerator {
 
         // Каждый этап изолирован: ошибка в одном из них пишется в лог (с координатами чанка), но не роняет сервер
         safely("ores", cp, () -> WarzoneDecor.ores(t, w, samples));
-        safely("vegetation", cp, () -> WarzoneDecor.vegetation(t, w, samples));
-        safely("landingPad", cp, () -> WarzoneDecor.landingPad(t, w));
-        safely("structures", cp, () -> WarzoneStructures.generate(t, w, samples));
+        if (t.isNatural()) {
+            // Errors propagate: a failed natural stage must not be saved as a permanently partial chunk.
+            NaturalForestDecor.vegetation(t, w, samples);
+        } else {
+            safely("vegetation", cp, () -> WarzoneDecor.vegetation(t, w, samples));
+            safely("landingPad", cp, () -> WarzoneDecor.landingPad(t, w));
+            safely("structures", cp, () -> WarzoneStructures.generate(t, w, samples));
+        }
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger("bobin_craft/warzone");
@@ -220,22 +228,38 @@ public final class WarzoneChunkGenerator extends ChunkGenerator {
     public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
         WarzoneTerrain t = terrain();
         if (!t.inside(x, z)) return world.getBottomY();
-        int h = t.height(x, z);
+        WarzoneTerrain.Sample sample = t.sample(x, z);
+        int h = sample.height;
         boolean floorOnly = heightmap == Heightmap.Type.OCEAN_FLOOR || heightmap == Heightmap.Type.OCEAN_FLOOR_WG;
-        return (floorOnly ? h : Math.max(h, WarzoneTerrain.SEA_LEVEL)) + 1;
+        return (floorOnly ? h : Math.max(h, sample.waterLevel)) + 1;
     }
 
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
         WarzoneTerrain t = terrain();
         BlockState[] states = new BlockState[world.getHeight()];
+        WarzoneSurface.Column column = new WarzoneSurface.Column();
+        if (t.isNatural() && t.inside(x, z)) {
+            double slope = Math.max(Math.abs(t.height(x + 1, z) - t.height(x - 1, z)),
+                    Math.abs(t.height(x, z + 1) - t.height(x, z - 1))) * 0.5;
+            WarzoneSurface.choose(t, t.sample(x, z), slope, x, z, column);
+        }
         int bottom = world.getBottomY();
         boolean in = t.inside(x, z);
-        int h = in ? t.height(x, z) : bottom - 1;
+        WarzoneTerrain.Sample sample = in ? t.sample(x, z) : null;
+        int h = in ? sample.height : bottom - 1;
         for (int i = 0; i < states.length; i++) {
             int y = bottom + i;
-            if (y <= h) states[i] = Blocks.STONE.getDefaultState();
-            else if (in && y <= WarzoneTerrain.SEA_LEVEL) states[i] = Blocks.WATER.getDefaultState();
+            if (y <= h) {
+                if (!t.isNatural()) states[i] = Blocks.STONE.getDefaultState();
+                else if (y == 0 || (y > 0 && y <= 2 && (WarzoneNoise.hash(t.seed + 7, x * 31 + y, z) & 1) == 0))
+                    states[i] = Blocks.BEDROCK.getDefaultState();
+                else if (y == h) states[i] = column.top;
+                else if (h - y <= column.fillerDepth) states[i] = column.filler;
+                else if (y < 6 + (int) (WarzoneNoise.hash(t.seed, x, z) & 3)) states[i] = Blocks.DEEPSLATE.getDefaultState();
+                else states[i] = Blocks.STONE.getDefaultState();
+            }
+            else if (in && y <= sample.waterLevel) states[i] = Blocks.WATER.getDefaultState();
             else states[i] = Blocks.AIR.getDefaultState();
         }
         return new VerticalBlockSample(bottom, states);

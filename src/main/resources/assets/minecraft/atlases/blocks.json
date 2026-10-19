@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "bobin_craft:block/river_water_still"
+    },
+    {
+      "type": "single",
+      "resource": "bobin_craft:block/river_water_flow"
+    }
+  ]
+}

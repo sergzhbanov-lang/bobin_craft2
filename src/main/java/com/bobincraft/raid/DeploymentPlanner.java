@@ -15,6 +15,11 @@ public final class DeploymentPlanner {
     public static final int GENERATION_VERSION = 1;
     private DeploymentPlanner() {}
 
+    /** Keep legacy saved signatures while invalidating choices when terrain generation changes. */
+    static int generationSignature(WarzoneTerrain terrain) {
+        return ((terrain.generationVersion() - 1) << 16) | GENERATION_VERSION;
+    }
+
     public record Point(int id, int x, int y, int z, int danger, String label) {}
 
     private record Candidate(int x, int y, int z, int danger, double quality, long tie) {}
@@ -23,7 +28,7 @@ public final class DeploymentPlanner {
 
     /** Landing pad doubles as the permanent, easily recognizable extraction location. */
     public static Point extraction(WarzoneTerrain t) {
-        return new Point(0, t.landingX(), WarzoneTerrain.LANDING_Y + 1, t.landingZ(), 0, "Landing extraction");
+        return new Point(0, t.landingX(), t.landingY() + 1, t.landingZ(), 0, "Landing extraction");
     }
 
     public static int minimumSeparation(WarzoneTerrain t) {
@@ -149,7 +154,7 @@ public final class DeploymentPlanner {
     }
 
     private static boolean dry(WarzoneTerrain.Sample s) {
-        return s.height >= WarzoneTerrain.SEA_LEVEL + 3 && s.channel < 0.015 && s.pool < 0.02
+        return s.height >= s.waterLevel + 3 && s.channel < 0.015 && s.pool < 0.02
                 && s.oasis < 0.05 && s.pillar < 0.01 && s.scar < 0.35 && s.roadBroken < 0.01;
     }
 

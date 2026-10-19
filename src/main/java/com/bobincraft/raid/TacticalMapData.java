@@ -25,7 +25,7 @@ public record TacticalMapData(int min, int size, int resolution, int[] colors,
     private static final int DEPLOYMENT_COUNT = 3;
     private static final int MAX_CACHE_ENTRIES = 4;
 
-    private record Key(long seed, int size, int version) {}
+    private record Key(long seed, int size, int version, int terrainVersion) {}
     private record KnownMarker(int discoveryId, Marker marker) {}
     private record BaseMap(int[] colors, List<KnownMarker> pois, List<Segment> roads) {}
 
@@ -126,7 +126,7 @@ public record TacticalMapData(int min, int size, int resolution, int[] colors,
     private static BaseMap baseMap(WarzoneTerrain terrain) {
         Objects.requireNonNull(terrain, "terrain");
         validateBounds(terrain.min, terrain.size, RESOLUTION);
-        Key key = new Key(terrain.seed, terrain.size, GENERATION_VERSION);
+        Key key = new Key(terrain.seed, terrain.size, GENERATION_VERSION, terrain.generationVersion());
         synchronized (CACHE) {
             BaseMap base = CACHE.get(key);
             if (base == null) {
@@ -178,8 +178,8 @@ public record TacticalMapData(int min, int size, int resolution, int[] colors,
                 terrain.sample(worldX, worldZ, sample);
                 int index = z * RESOLUTION + x;
                 heights[index] = sample.height;
-                pixels[index] = terrainColor(sample);
-                if (sample.height > WarzoneTerrain.SEA_LEVEL && sample.height < 110
+                pixels[index] = terrain.usesRevisedLandscape() ? naturalTerrainColor(sample) : terrainColor(sample);
+                if (sample.height > sample.waterLevel && sample.height < 110
                         && sample.region != WarzoneTerrain.Region.BADLANDS && sample.basePad < 0.3
                         && sample.road < 0.3 && sample.path < 0.3) {
                     pixels[index] = shade(pixels[index], 1.0 - terrain.forest(worldX, worldZ) * 0.23);
@@ -215,6 +215,11 @@ public record TacticalMapData(int min, int size, int resolution, int[] colors,
                 }
             }
         }
+        if (terrain.isNatural()) {
+            for (var route : terrain.naturalLandscape().routes()) {
+                addRoad(roads, terrain, route.x1, route.z1, route.x2, route.z2);
+            }
+        }
         for (var hideout : terrain.hideoutPlan().hideouts()) {
             addMarker(markers, terrain, hideoutDiscoveryId(hideout.id()), hideout.cx(), hideout.cz(), hideout.name());
         }
@@ -243,6 +248,36 @@ public record TacticalMapData(int min, int size, int resolution, int[] colors,
         if (sample.height <= WarzoneTerrain.SEA_LEVEL) {
             return sample.height < WarzoneTerrain.SEA_LEVEL - 7 ? 0xff324b4a : 0xff4f6860;
         }
+        return landTerrainColor(sample);
+    }
+
+    /** Depth is the actual number of generated water blocks, matching the walkable shallow shelves. */
+    static int naturalTerrainColor(WarzoneTerrain.Sample sample) {
+        int depth = sample.waterLevel - sample.height;
+        if (depth > 0) {
+            boolean shallow = depth <= 2;
+            return switch (sample.waterState) {
+                case STILL -> shallow ? 0xff7d9b82 : 0xff355d59;
+                case SLOW -> shallow ? 0xff8b9c74 : 0xff465e50;
+                case FLOWING -> shallow ? 0xff75a7a1 : 0xff2d5364;
+                case RAPIDS -> shallow ? 0xff9dbcb9 : 0xff446c7c;
+                case NONE -> shallow ? 0xff7da093 : 0xff355b63;
+            };
+        }
+        int color = landTerrainColor(sample);
+        if (sample.road > 0.3 || sample.path > 0.35) {
+            color = switch (sample.routeStyle) {
+                case 0 -> 0xff9e946e; // Grass between earth wagon ruts.
+                case 1 -> 0xffa7a49a; // Broad pale gravel.
+                case 2 -> 0xff786a52; // Leafy, rooted woodland trail.
+                case 3 -> 0xffac916c; // Narrow, worn earth footpath.
+                default -> 0xffaaa087;
+            };
+        }
+        return color;
+    }
+
+    private static int landTerrainColor(WarzoneTerrain.Sample sample) {
         if (sample.height >= 133) return 0xffa9ac95;
         if (sample.edge < 16) return 0xff666b6c;
         int color = switch (sample.region) {

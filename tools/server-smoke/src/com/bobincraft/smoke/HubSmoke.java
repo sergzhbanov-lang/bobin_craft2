@@ -61,6 +61,13 @@ public final class HubSmoke implements ModInitializer {
     }
 
     private static void checkWorld(MinecraftServer server) {
+        try {
+            DimensionProfileChecks.run(server);
+            if (Boolean.getBoolean("bobin.smoke.legacy")) NaturalWorldChecks.runLegacy(server);
+            else NaturalWorldChecks.run(server);
+        } catch (Exception failure) {
+            throw new AssertionError("Natural generation runtime checks failed", failure);
+        }
         HubForestChecks.run();
         LOG.info("BOBIN_SMOKE_FOREST_PASS assertions={} deterministic chunk seams, finite clearance, terrain and heightmap samples", HubForestChecks.assertions);
         ServerWorld hub = server.getOverworld();
@@ -139,6 +146,10 @@ public final class HubSmoke implements ModInitializer {
             check(restored.getUuid().equals(guard.getUuid()), "hub guard NBT UUID stable");
         }
         testEnemyPersistence(server);
+        if (Boolean.getBoolean("bobin.smoke.readOnly")) {
+            LOG.info("BOBIN_SMOKE_READ_ONLY_PASS: hub services and NPC persistence checked without changing inventories, trades or player blocks");
+            return;
+        }
         ItemStack marker = starter.getStack(26);
         if (marker.isOf(Items.PAPER) && marker.hasNbt() && marker.getNbt().getBoolean("BobinSmoke")) {
             NbtCompound state = marker.getNbt();

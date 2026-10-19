@@ -1,0 +1,72 @@
+{
+  "textures": {
+    "all": "bobin_craft:block/river_stone",
+    "particle": "bobin_craft:block/river_stone"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        7
+      ],
+      "to": [
+        8,
+        3,
+        14
+      ],
+      "faces": {
+        "up": {
+          "texture": "#all"
+        },
+        "down": {
+          "texture": "#all"
+        },
+        "north": {
+          "texture": "#all"
+        },
+        "south": {
+          "texture": "#all"
+        },
+        "east": {
+          "texture": "#all"
+        },
+        "west": {
+          "texture": "#all"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        5,
+        8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#all"
+        },
+        "down": {
+          "texture": "#all"
+        },
+        "north": {
+          "texture": "#all"
+        },
+        "south": {
+          "texture": "#all"
+        },
+        "east": {
+          "texture": "#all"
+        },
+        "west": {
+          "texture": "#all"
+        }
+      }
+    }
+  ]
+}

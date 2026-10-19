@@ -6,6 +6,7 @@ import com.bobincraft.raid.HubSafety;
 import com.bobincraft.raid.RaidManager;
 import com.bobincraft.raid.WarzoneEncounterManager;
 import com.bobincraft.siege.SiegeManager;
+import com.bobincraft.warzone.NaturalWaterEffects;
 import com.bobincraft.warzone.WarzoneDimension;
 import com.bobincraft.weapon.AK47Item;
 import com.bobincraft.weapon.BulletPenetration;
@@ -66,7 +67,9 @@ public class BobinCraft implements ModInitializer {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> entries.add(ICICLE_ITEM));
         SiegeManager.register();
         // Измерение «Зона боевых действий» (процедурный рельеф; позже — базы и ИИ-враги)
+        com.bobincraft.warzone.ForestBlocks.register();
         WarzoneDimension.register();
+        NaturalWaterEffects.register();
         HubContent.register();
         WarzoneEncounterManager.register();
         RaidManager.register();
